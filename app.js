@@ -8,6 +8,7 @@ serv.listen(PORT, () => {
     console.log("Server running on http://localhost:" + PORT + "/");
 });
 
+//A player object that holds position, orientation, name and id
 var Player = function(id, name){
     var self = {
         id:id,
@@ -57,6 +58,8 @@ io.sockets.on('connection', function(socket){
     });
 });
 
+//server update loop
+//sends 45 update packages every second
 setInterval(function(){
     var pack = [];
 

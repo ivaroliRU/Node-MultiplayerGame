@@ -1,4 +1,4 @@
-var playerSpeed = 5;
+var playerSpeed = 1000;
 
 var keysDown = {
     w:false,
@@ -41,14 +41,14 @@ document.onkeyup = function(event){
     }
 }
 
-export function getNewPosition(player){
+export function getNewPosition(player, deltaTime){    
     var wantedPosition = {x:0,y:0};
     var normFactor = 0;
 
-    if(keysDown.w == true){wantedPosition.y-=playerSpeed;normFactor++;}
-    if(keysDown.a == true){wantedPosition.x+=playerSpeed;normFactor++;}
-    if(keysDown.s == true){wantedPosition.y+=playerSpeed;normFactor++;}
-    if(keysDown.d == true){wantedPosition.x-=playerSpeed;normFactor++;}
+    if(keysDown.w == true){wantedPosition.y-=playerSpeed * deltaTime;normFactor++;}
+    if(keysDown.a == true){wantedPosition.x+=playerSpeed * deltaTime;normFactor++;}
+    if(keysDown.s == true){wantedPosition.y+=playerSpeed * deltaTime;normFactor++;}
+    if(keysDown.d == true){wantedPosition.x-=playerSpeed * deltaTime;normFactor++;}
 
     if(normFactor > 0){
         wantedPosition.x = wantedPosition.x/normFactor + player.x;
@@ -61,6 +61,7 @@ export function getNewPosition(player){
 
     var calculatedPosition = lerp(player, wantedPosition, 0.5);
     
+    //update the position with respect to delta time
     player.x = calculatedPosition.x;
     player.y = calculatedPosition.y;
     

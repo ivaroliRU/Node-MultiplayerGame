@@ -17,11 +17,22 @@ document.getElementById("join-btn").addEventListener("click", function(event){
     joinGame(name);
 });
 
+//for calculating delta time
+var startTime = new Date();
+
+//Set the main loop
+//45 fps
 setInterval(function(){
+    var endTime = new Date();
+    var timeDiff = endTime - startTime; //in ms
+    // strip the ms
+    timeDiff /= 1000;
+    startTime = new Date();
+
     var players = getPlayers();
     var player = getMyPlayer();
 
-    player = getNewPosition(player);
+    player = getNewPosition(player, timeDiff);
 
     updatePosition({x:player.x,y:player.y});
     update(players, player);
