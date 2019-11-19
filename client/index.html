@@ -24,12 +24,18 @@
             image-rendering: pixelated;
             image-rendering: crisp-edges;
         }
+        .back-screen{
+            background: url(./assets/background.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
     </style>
 </head>
 
 <body>
     <div id="game-container" style="width:75%; height: 100%; float: left;">
-        <div class="screen" id="background-screen" width="500" height="500" style="background: url(./assets/background.png);border:1px solid #000000;position:absolute; left:0px; top:0px;"></div>
+        <div class="screen back-screen" id="background-screen" width="500" height="500" style="border:1px solid #000000;position:absolute; left:0px; top:0px;"></div>
         <canvas class="screen" id="game-screen" width="500" height="500" style="border:1px solid #000000;position:absolute; left:0px; top:0px;"></canvas>
     </div>
     <div id="chat-container" style="width:24.5%; height: 100%; float: right;">

@@ -1,4 +1,10 @@
-var playerSpeed = 1000;
+const accelaration = 20;
+const angularAccelaration = 5;
+const maxSpeed = 1000;
+const maxAngularSpeed = 250;
+
+var velocity = 0;
+var angularVelocity = 0;
 
 var keysDown = {
     w:false,
@@ -23,12 +29,6 @@ document.onkeydown = function(event){
         case 65:
             keysDown.d = true;
             break;
-        case 81:
-            keysDown.q = true;
-            break;
-        case 69:
-            keysDown.e = true;
-            break;
     }
 }
 
@@ -46,42 +46,53 @@ document.onkeyup = function(event){
         case 65:
             keysDown.d = false;
         break;
-        case 81:
-            keysDown.q = false;
-            break;
-        case 69:
-            keysDown.e = false;
-            break;
     }
 }
 
 export function getNewPosition(player, deltaTime){    
-    var wantedPosition = {x:0,y:0};
-    var normFactor = 0;
+    var wantedPosition = {x:player.x,y:player.y};
+    var vector = {x:0,y:0};
 
-    if(keysDown.w == true){wantedPosition.y-=playerSpeed * deltaTime;normFactor++;}
-    if(keysDown.a == true){wantedPosition.x+=playerSpeed * deltaTime;normFactor++;}
-    if(keysDown.s == true){wantedPosition.y+=playerSpeed * deltaTime;normFactor++;}
-    if(keysDown.d == true){wantedPosition.x-=playerSpeed * deltaTime;normFactor++;}
-    if(keysDown.q == true){player.orientation--;}
-    if(keysDown.e == true){player.orientation++;}
-
-    if(normFactor > 0){
-        wantedPosition.x = wantedPosition.x/normFactor + player.x;
-        wantedPosition.y = wantedPosition.y/normFactor + player.y;
+    if(keysDown.w == true && velocity < maxSpeed){
+        velocity+=accelaration;
     }
     else{
-        wantedPosition.x = player.x;
-        wantedPosition.y = player.y;
+        if(velocity > 0){
+            velocity-=accelaration;
+        }
+        else if(velocity < 0){
+            velocity = 0;
+        }
+    }
+    if(keysDown.a == true && angularVelocity<maxAngularSpeed){
+        angularVelocity+=angularAccelaration;
+    }
+    
+    if(keysDown.d == true && angularVelocity>-maxAngularSpeed){
+        angularVelocity-=angularAccelaration;
     }
 
+    if(!keysDown.d && !keysDown.a){
+        if(angularVelocity > 0){
+            angularVelocity-=angularAccelaration;
+        }
+        else if (angularVelocity < 0){
+            angularVelocity+=angularAccelaration;
+        }
+    }
+
+    vector.x = Math.cos(player.orientation*(Math.PI/180) - (Math.PI/2))*velocity;
+    vector.y = Math.sin(player.orientation*(Math.PI/180) - (Math.PI/2))*velocity;
+
+    wantedPosition.x += vector.x * deltaTime;
+    wantedPosition.y += vector.y * deltaTime;
     var calculatedPosition = lerp(player, wantedPosition, 0.5);
     
     //update the position with respect to delta time
     player.x = calculatedPosition.x;
     player.y = calculatedPosition.y;
+    player.orientation = player.orientation + angularVelocity * deltaTime;
     
-
     return player;
 }
 
