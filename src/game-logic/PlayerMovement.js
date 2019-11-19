@@ -4,23 +4,31 @@ var keysDown = {
     w:false,
     a:false,
     s:false,
-    d:false
+    d:false,
+    q:false,
+    e:false
 }
 
 document.onkeydown = function(event){
     switch(event.keyCode){
         case 87:
             keysDown.w = true;
-        break;
+            break;
         case 68:
             keysDown.a = true;
-        break;
+            break;
         case 83:
             keysDown.s = true;
-        break;
+            break;
         case 65:
             keysDown.d = true;
-        break;
+            break;
+        case 81:
+            keysDown.q = true;
+            break;
+        case 69:
+            keysDown.e = true;
+            break;
     }
 }
 
@@ -38,6 +46,12 @@ document.onkeyup = function(event){
         case 65:
             keysDown.d = false;
         break;
+        case 81:
+            keysDown.q = false;
+            break;
+        case 69:
+            keysDown.e = false;
+            break;
     }
 }
 
@@ -49,6 +63,8 @@ export function getNewPosition(player, deltaTime){
     if(keysDown.a == true){wantedPosition.x+=playerSpeed * deltaTime;normFactor++;}
     if(keysDown.s == true){wantedPosition.y+=playerSpeed * deltaTime;normFactor++;}
     if(keysDown.d == true){wantedPosition.x-=playerSpeed * deltaTime;normFactor++;}
+    if(keysDown.q == true){player.orientation--;}
+    if(keysDown.e == true){player.orientation++;}
 
     if(normFactor > 0){
         wantedPosition.x = wantedPosition.x/normFactor + player.x;

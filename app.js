@@ -42,13 +42,19 @@ io.sockets.on('connection', function(socket){
         if(PLAYER_LIST[socket.id] != {}){
             PLAYER_LIST[socket.id].x = data.x;
             PLAYER_LIST[socket.id].y = data.y;
+            PLAYER_LIST[socket.id].orientation = data.orientation;
         }
     });
 
     //sending and recieving a message from the server
     socket.on('SendMessage', function(data){
-        if(PLAYER_LIST[socket.id].x != null && PLAYER_LIST[socket.id].y != null){
-            socket.emit('GetMessage', data);
+        for(var i in SOCKET_LIST){
+            var sock = SOCKET_LIST[i];
+            var player = PLAYER_LIST[i];
+
+            //if(player.name != "" || player.name != undefined){           
+                sock.emit('GetMessage', data);
+            //}
         }
     });
 
@@ -70,7 +76,8 @@ setInterval(function(){
             x:player.x,
             y:player.y,
             id:player.id,
-            name:player.name
+            name:player.name,
+            orientation:player.orientation
         });
     }
 

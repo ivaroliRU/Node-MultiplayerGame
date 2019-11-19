@@ -1,71 +1,67 @@
 //set up and get canvas
 const canvas = document.getElementById("game-screen");
-const backgroundCanvas = document.getElementById("background-screen");
-const scale = 4;
+const background = document.getElementById("background-screen");
+const scale = 1;
 
 var testImg = new Image();
-testImg.src = "../assets/priest3_v2_4.png";
+testImg.src = "../assets/player1.png";
 
 //reset height
 canvas.width = canvas.parentElement.clientWidth;
 canvas.height = canvas.parentElement.clientHeight;//window.innerHeight;
-backgroundCanvas.width = canvas.width;
-backgroundCanvas.height = canvas.height;
+
+background.style.width = canvas.width.toString()+"px";
+background.style.height = canvas.height.toString()+"px";
+
 //get the middle of the canvas
 const xOffset = canvas.width/2;
 const yOffset = canvas.height/2;
 
 //get drawing context
 var ctx = canvas.getContext('2d');
-var background = backgroundCanvas.getContext('2d');
+//var background = backgroundCanvas.getContext('2d');
 
 //scaling for pixle game
-ctx.scale(4, 4)
-background.scale(4, 4)
+ctx.scale(scale, scale)
+//background.scale(scale, scale)
 
 //an update function that runs every frame
 export function update(players, currentPlayer){
     //ctx.font = '100 18px Arial';
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    drawBackground(currentPlayer.x, currentPlayer.y);
-
-    drawBackground(xOffset);
 
     for(var i in players){
         if(players[i].x == null || players[i].y == null){
             continue;
         }
 
-        if(players[i].id == currentPlayer.id){                
-            //drawCircle(15, xOffset / scale, yOffset / scale, '#00FF00');
-            ctx.drawImage(testImg, xOffset / scale, yOffset / scale);
+        if(players[i].id == currentPlayer.id){
+            renderImage(testImg, xOffset / scale, yOffset / scale, players[i].orientation);
             continue;
         }
         else{
             var xPos = players[i].x - currentPlayer.x + xOffset;
             var yPos = players[i].y - currentPlayer.y + yOffset;
 
-            drawCircle(15, xPos / scale, yPos / scale, '#FF0000');
+            renderImage(testImg, xPos / scale, yPos / scale, players[i].orientation);
             continue;
         }
         
     }
 }
 
-export function deltaTime(){
-
+function renderImage ( img, x, y, angle) {
+    ctx.save();
+    ctx.translate(x, y);        
+    ctx.rotate(angle * (Math.PI/180));
+    
+    ctx.drawImage(img,-img.width/2,-img.height/2);        
+    ctx.restore(); 
 }
 
-//darw a cicle
-function drawCircle(width, x, y, color){
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(x, y, width, 0, 2 * Math.PI);
-    ctx.fill();
-}
 
 //sdraw offset background in secondary canvas
-function drawBackground(offX, offY){    
+/*function drawBackground(offX, offY){
     if(offX == NaN || offY == NaN || offY == undefined){
         return;
     }
@@ -87,4 +83,4 @@ function drawBackground(offX, offY){
             }
         }        
     }
-}
+}*/
